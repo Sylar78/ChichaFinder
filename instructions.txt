@@ -1,0 +1,252 @@
+Voici les fonctionnalités que je souhaite voir dans l'application :
+
+1. L'utilisateur doit pour voir ajouter une nouvelle chicha à sa collection. Chaque chicha
+doit être représenté par un nom et un icone.
+
+2. L'application doit lister l'ensemble de toutes les chichas de l'utilisateur sur un seul même écran
+
+
+ChichaAroundMe est une application mobile  pour tout ce qui concerne la recherche d'un restaurant thé lounge (chicha). Voici les principales fonctionnalités que l’on y trouve 👇
+
+📌 1. Recherche de chichas
+
+Filtres avancés : prix, étoiles, équipements (Wi-Fi, parking, etc.), distance
+
+Carte interactive pour visualiser les lieux
+
+Disponibilités & tarifs en temps réel
+
+
+⭐ 2. Avis et notes des voyageurs
+
+Avis utilisateurs (texte + photos)
+
+Notes sur 5 étoiles, avec critères (propreté, accueil, confort, etc.)
+
+Classements par popularité, meilleur rapport qualité/prix
+
+Possibilité de répondre aux avis (propriétaires)
+
+🍽️ 3. Recherche de chichas
+
+Trouve des chichas près de toi
+
+Filtrer par type de chicha (distance, prix, note, etc.)
+
+Avis, notes, fourchette de prix
+
+
+📍 4. Cartes & localisation
+
+Cartes intégrées (Google Maps ou autre si pas d'API)
+
+Visualiser : chichas
+
+Itinéraires à pied ou en voiture
+
+
+
+📸 5. Photos & Médias
+
+Photos uploadées par les voyageurs
+
+Classement par catégorie (ambiance, prix, propreté…)
+
+Option pour ajouter tes propres photos
+
+💬 8. Questions / Réponses communautaires
+
+Tu peux poser une question sur un lieu
+
+La communauté peut répondre (locals, voyageurs récents)
+
+Réponses très utiles pour détails pratiques (ex : accueil enfant, wifi, parking…)
+
+🧳 9. Gestion de tes chichas
+
+Carnets de chichas : regrouper chichas + lieux favoris
+
+Option pour créer des listes : « À visiter », « A fuir »
+
+Partage avec les amis ou en familles
+
+🔔 10. Notifications & recommandations
+
+Suggestions personnalisées selon tes recherches et destinations
+
+Alertes prix 
+
+📲 Fonctions sociales
+
+Tu peux :
+
+te connecter via email ou réseaux sociaux
+
+suivre des amis
+
+voir leurs avis & recommandations
+
+🧠 En résumé
+
+ChichaAroundMe est une plateforme tout-en-un de recherche de chichas  qui te permet de :
+
+✔ Trouver chichas
+✔ Lire et écrire des avis fiables
+✔ Profiter de recommandations personnalisées
+
+
+
+Ajoute sur l'écran de recherche l'ensemble des chichas del a même manière que la liste est présentée sur l'écran chicha. lorsque l'on filtre  en fonction des critères sélectionnés (distance, note, prix, équipements…) et que l'on clique sur rechercher la liste se met à jour.
+
+
+Sur l'écran Carte si la carte Google MAPS n'est pas disponible ajoute une carte qui n'a pas besoin d'API pour s'afficher
+
+
+🥈 2. OpenStreetMap + Overpass API (gratuit & open-source)
+✅ Principe
+
+OpenStreetMap contient beaucoup de bars chichas tagués comme :
+
+amenity=bar
+
+name ou description contenant chicha / shisha / hookah
+
+🔍 Exemple de requête Overpass
+node
+["amenity"="bar"]
+(around:3000,48.8566,2.3522)
+["name"~"chicha|shisha|hookah",i];
+out;
+
+✅ Avantages
+
+✔️ Gratuit
+✔️ Open data
+✔️ Pas de quota
+✔️ Idéal backend
+
+❌ Inconvénients
+
+Données parfois incomplètes
+
+Pas d’avis ni notes fiables
+
+Dépend des contributeurs
+
+👉 Parfait pour compléter Google Maps ou pour un projet 100 % open
+
+
+📱 Côté application (iOS / Android)
+📍 Géolocalisation
+
+GPS utilisateur
+
+Ou recherche par ville
+
+🗺️ Affichage
+
+Carte ( MapKit)
+
+Clustering automatique
+
+Liste triée par distance / note
+
+
+
+
+Je veux pour l'écran Recherche :
+
+le code exact  pour interroger OpenStreetMap 
+
+te créer une API backend qui agrège OSM
+
+proposer un modèle de base de données pour stocker les bars chichas
+
+
+
+Use the following instructions to build a modern chicha website.
+
+Next.js Version: last
+
+React: last version
+
+Node.js: last version
+
+Package Manager: npm (not yarn)
+
+Install the following dependencies:
+
+npm install autoprefixer@^10.0.0 \
+            lucide-react@^0.244.0 \
+            next@13.4.12 \
+            postcss@^8.4.0 \
+            react@18.2.0 \
+            react-dom@18.2.0 \
+            tailwindcss@^3.2.0
+Technical Foundation
+1. Project Architecture
+/
+├── components/          # Reusable UI components
+├── pages/              # Next.js pages and routing
+├── public/             # Static assets
+├── styles/            # Global styles and Tailwind
+└── utils/             # Helper functions if needed
+Configuration Files Setup:
+Create next.config.js for image domains
+Setup tailwind.config.js with custom theme
+Configure postcss.config.js
+Add global styles in styles/globals.css
+4. Key Technical Considerations
+Responsive Design
+Mobile-first approach
+Breakpoints:
+sm: 640px
+md: 768px
+lg: 1024px
+xl: 1280px
+State Management
+Use React hooks for local state
+Implement context for theme/global states
+Avoid unnecessary re-renders
+Animation Implementation
+Use CSS transitions for simple animations
+Implement smooth scroll behavior
+Add hover effects using Tailwind
+Transition timings example:
+transition-duration: 300ms
+transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
+5. Development Best Practices
+Code Organization
+Keep components small and focused
+Use consistent file naming
+Implement proper commenting
+Follow DRY principle
+Styling Methodology
+Use Tailwind utility classes
+Implement consistent spacing
+Follow color system
+Maintain responsive design patterns
+Performance Considerations
+Minimize third-party dependencies
+No Typescript
+Image Optimization
+Next.js Image component usage throughout the app
+Remote domains configured in next.config.js for freepik.com
+Gradient overlays for text contrast
+Priority loading for hero first image
+Layout Optimization
+Responsive grid layouts (1 column mobile, 3 columns desktop)
+Tailwind's container class for consistent spacing
+Mobile-first approach with md: breakpoint
+Proper spacing units through Tailwind classes
+Component Structure
+Modular component architecture
+Reusable button styles
+Consistent styling patterns
+Clean component hierarchy
+
+
+
+Ecris_moi un fichier PRD (Product Requirement Document) qui explique comment structurer mes fichiers, en tenant compte des fonctionnalités que je souhaite développer.
+
+Je vais utiliser ce fichier dans les instructions que je vais fournir a VSCode.
