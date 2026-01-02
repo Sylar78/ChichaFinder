@@ -1,6 +1,6 @@
 // API Route: Search bars with filters
-import { getBars } from '../../lib/db/queries';
-import { filterBars, sortBars } from '../../utils/helpers';
+import { getBars } from '../../../lib/db/queries';
+import { filterBars, sortBars } from '../../../utils/helpers';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
