@@ -2,7 +2,7 @@
 import { 
   updateUserChicha, 
   deleteUserChicha 
-} from '../../../lib/db/queries';
+} from '../../../lib/db/queries.js';
 
 export default async function handler(req, res) {
   const { id } = req.query;

@@ -1,5 +1,5 @@
 // API Route: Reviews CRUD operations
-import { getReviewsByBarId, createReview } from '../../../lib/db/queries';
+import { getReviewsByBarId, createReview } from '../../../lib/db/queries.js';
 
 export default async function handler(req, res) {
   try {
