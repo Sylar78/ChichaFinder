@@ -7,15 +7,20 @@ export default function ChichaCard({ chicha, onEdit, onDelete }) {
   // Get the icon component dynamically
   const IconComponent = Icons[chicha.icon] || Icons.Flame;
 
+  // Déterminer le chemin de l'image miniature
+  const imageName = chicha.image || 'ChatGPT Image 2 janv. 2026, 14_45_06.png';
+  const imagePath = `/images/chichas/${imageName}`;
+
   return (
     <Card className="p-6">
       <div className="flex items-start justify-between">
         <div className="flex items-center space-x-4">
-          {/* Icon */}
-          <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
-            <IconComponent className="text-white" size={32} />
-          </div>
-          
+          {/* Miniature */}
+          <img
+            src={imagePath}
+            alt={chicha.name}
+            className="w-16 h-16 rounded-full object-cover border-2 border-primary-500"
+          />
           {/* Info */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900">{chicha.name}</h3>

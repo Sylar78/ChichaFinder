@@ -21,9 +21,17 @@ export default function Recherche() {
   });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  // Initialize mock data on component mount
+  // Initialize mock data and load all bars on component mount
   useEffect(() => {
     initializeMockData();
+    // Charger tous les bars fictifs au chargement initial
+    if (typeof window !== 'undefined') {
+      const data = localStorage.getItem('chichaAroundMeData');
+      if (data) {
+        const parsed = JSON.parse(data);
+        setBars(parsed.bars || []);
+      }
+    }
   }, []);
 
   const handleSearch = async (query) => {
@@ -92,8 +100,30 @@ export default function Recherche() {
   };
 
   const handleApplyFilters = () => {
+    // Si la position utilisateur est connue, filtrage géographique
     if (userLocation) {
       searchBarsNearLocation(userLocation.latitude, userLocation.longitude);
+    } else {
+      // Sinon, filtrage local sur tous les bars mockés
+      if (typeof window !== 'undefined') {
+        const data = localStorage.getItem('chichaAroundMeData');
+        if (data) {
+          let bars = JSON.parse(data).bars || [];
+          // Filtrage prix
+          if (filters.priceRange && filters.priceRange.length > 0) {
+            bars = bars.filter(bar => filters.priceRange.includes(bar.price_range));
+          }
+          // Filtrage note
+          if (filters.minRating && filters.minRating > 0) {
+            bars = bars.filter(bar => bar.average_rating >= filters.minRating);
+          }
+          // Filtrage équipements
+          if (filters.amenities && filters.amenities.length > 0) {
+            bars = bars.filter(bar => filters.amenities.every(a => bar.amenities && bar.amenities[a]));
+          }
+          setBars(bars);
+        }
+      }
     }
     setShowMobileFilters(false);
   };

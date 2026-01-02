@@ -16,15 +16,35 @@ export default function BarCard({ bar, onClick }) {
             fill
             className="object-cover"
           />
+        ) : bar.image ? (
+          <Image
+            src={`/images/chichas/${bar.image}`}
+            alt={bar.name}
+            fill
+            className="object-cover"
+          />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-400">
-            <MapPin size={48} />
-          </div>
+          <Image
+            src={bar.defaultImage || "/images/chichas/ChatGPT Image 2 janv. 2026, 14_45_06.png"}
+            alt="Chicha par défaut"
+            fill
+            className="object-cover"
+          />
         )}
-        {/* Price badge */}
+        {/* Price badge + Rating below */}
         {bar.price_range && (
-          <div className="absolute top-3 right-3 bg-white px-3 py-1 rounded-full text-sm font-medium">
-            {bar.price_range}
+          <div className="absolute top-3 right-3 flex flex-col items-end">
+            <div className="bg-white px-3 py-1 rounded-full text-sm font-medium mb-1">
+              {bar.price_range}
+            </div>
+            {/* Note sous le prix */}
+            <div className="flex items-center bg-yellow-50 px-2 py-0.5 rounded-full text-xs font-semibold text-yellow-800 shadow">
+              <Star size={14} className="text-yellow-400 fill-current mr-1" />
+              {bar.average_rating > 0 ? bar.average_rating.toFixed(1) : 'N/A'}
+              {bar.review_count > 0 && (
+                <span className="ml-1 text-gray-500 font-normal">({bar.review_count})</span>
+              )}
+            </div>
           </div>
         )}
       </div>

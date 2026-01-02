@@ -1,5 +1,6 @@
 // Bar detail page - [id].js
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Layout from '../../components/layout/Layout';
 import ReviewCard from '../../components/reviews/ReviewCard';
@@ -7,6 +8,7 @@ import RatingStars from '../../components/reviews/RatingStars';
 import Button from '../../components/ui/Button';
 import { MapPin, Phone, Globe, Clock, Star, Wifi, Car, Sun } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { mockBars } from '../../lib/db/mockData';
 
 const MapView = dynamic(
   () => import('../../components/map/MapView'),
@@ -22,35 +24,9 @@ export default function BarDetail() {
 
   useEffect(() => {
     if (id) {
-      // In a real app, fetch bar details from API using OSM ID
-      // For now, we'll create a mock bar
-      const mockBar = {
-        osm_id: id,
-        name: 'Le Lounge Oriental',
-        latitude: 48.8566,
-        longitude: 2.3522,
-        address: '123 Rue de la Paix',
-        city: 'Paris',
-        postal_code: '75001',
-        phone: '+33 1 23 45 67 89',
-        website: 'https://example.com',
-        price_range: '€€',
-        average_rating: 4.5,
-        review_count: 42,
-        amenities: {
-          wifi: true,
-          parking: true,
-          terrace: true,
-          accessible: false,
-          music: true,
-          food: true
-        },
-        opening_hours: 'Lun-Dim: 18h-2h',
-        description: 'Un bar à chicha convivial avec une ambiance chaleureuse et une large sélection de saveurs.',
-        photos: []
-      };
-      
-      setBar(mockBar);
+      // Recherche du bar dans les données mockBars par osm_id ou id
+      const found = mockBars.find(b => b.osm_id === id || b.id?.toString() === id?.toString());
+      setBar(found || null);
       setLoading(false);
     }
   }, [id]);
@@ -108,6 +84,38 @@ export default function BarDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
+
+            {/* Image principale si disponible */}
+            <div className="bg-white p-0 rounded-lg shadow-md overflow-hidden flex flex-col items-center">
+              <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', minHeight: 200 }}>
+                {bar.image ? (
+                  <Image
+                    src={`/images/chichas/${bar.image}`}
+                    alt={bar.name}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    className="w-full h-full"
+                  />
+                ) : bar.photos && bar.photos.length > 0 ? (
+                  <Image
+                    src={bar.photos[0]}
+                    alt={bar.name}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    className="w-full h-full"
+                  />
+                ) : (
+                  <Image
+                    src="/images/chichas/ChatGPT Image 2 janv. 2026, 14_45_06.png"
+                    alt="Chicha par défaut"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    className="w-full h-full"
+                  />
+                )}
+              </div>
+            </div>
+
             {/* Description */}
             {bar.description && (
               <div className="bg-white p-6 rounded-lg shadow-md">
