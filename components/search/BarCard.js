@@ -3,8 +3,28 @@ import Card from '../ui/Card';
 import { MapPin, Star, DollarSign } from 'lucide-react';
 import Image from 'next/image';
 import { formatDistance } from '../../utils/helpers';
+import { useEffect, useState } from 'react';
 
-export default function BarCard({ bar, onClick }) {
+  // Exemple : persistance de la collection utilisateur côté client
+  const [userChichas, setUserChichas] = useState([]);
+
+  useEffect(() => {
+    // Charger la collection depuis localStorage au montage
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('chichaAroundMeData') : null;
+    if (saved) {
+      try {
+        setUserChichas(JSON.parse(saved));
+      } catch (e) {}
+    }
+  }, []);
+
+  useEffect(() => {
+    // Sauvegarder la collection à chaque modification
+    if (userChichas.length > 0 && typeof window !== 'undefined') {
+      localStorage.setItem('chichaAroundMeData', JSON.stringify(userChichas));
+    }
+  }, [userChichas]);
+
   return (
     <Card onClick={() => onClick(bar)} hover>
       {/* Image */}
