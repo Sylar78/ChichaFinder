@@ -2,9 +2,9 @@
 import Card from '../ui/Card';
 import { MapPin, Star, DollarSign } from 'lucide-react';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 import { formatDistance } from '../../utils/helpers';
-import { useEffect, useState } from 'react';
-
+export default function BarCard({ bar, onClick }) {
   // Exemple : persistance de la collection utilisateur côté client
   const [userChichas, setUserChichas] = useState([]);
 
