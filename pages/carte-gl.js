@@ -1,4 +1,4 @@
-// Carte page - Interactive map view
+// Carte GL page - Interactive map view with MapLibre GL
 import { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
 import dynamic from 'next/dynamic';
@@ -9,13 +9,13 @@ import { initializeMockData } from '../lib/db/mockData';
 import SearchBar from '../components/search/SearchBar';
 import FilterBar from '../components/search/FilterBar';
 
-// Dynamically import map component (client-side only)
-const MapView = dynamic(
-  () => import('../components/map/MapView'),
+// Dynamically import MapLibre GL map component (client-side only)
+const MapLibreView = dynamic(
+  () => import('../components/map/MapLibreView'),
   { ssr: false }
 );
 
-export default function Carte() {
+export default function CarteGL() {
   const [userLocation, setUserLocation] = useState(null);
   const [bars, setBars] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,6 +32,22 @@ export default function Carte() {
     initializeMockData();
     handleUseMyLocation();
   }, []);
+
+  const handleUseMyLocation = async () => {
+    setLoading(true);
+    try {
+      const position = await getCurrentPosition();
+      setUserLocation(position);
+      setCenter(position);
+      await searchBarsNearLocation(position.latitude, position.longitude);
+    } catch (error) {
+      console.error('Error getting location:', error);
+      await searchBarsNearLocation(center.latitude, center.longitude);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSearch = async (query) => {
     setLoading(true);
     try {
@@ -57,6 +73,33 @@ export default function Carte() {
     }
   };
 
+  const searchBarsNearLocation = async (latitude, longitude, bounds) => {
+    try {
+      let body;
+      if (bounds) {
+        body = JSON.stringify({
+          south: bounds.south,
+          west: bounds.west,
+          north: bounds.north,
+          east: bounds.east
+        });
+      } else {
+        body = JSON.stringify({ latitude, longitude, radius: 10000 });
+      }
+      const response = await fetch('/api/osm/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body
+      });
+      const data = await response.json();
+      if (data.success) {
+        setBars(data.bars);
+      }
+    } catch (error) {
+      console.error('Error fetching bars:', error);
+    }
+  };
+
   const handleFilterChange = (filterName, value) => {
     setFilters(prev => ({ ...prev, [filterName]: value }));
   };
@@ -77,45 +120,12 @@ export default function Carte() {
     });
   };
 
-  const handleUseMyLocation = async () => {
-    setLoading(true);
-    try {
-      const position = await getCurrentPosition();
-      setUserLocation(position);
-      setCenter(position);
-      await searchBarsNearLocation(position.latitude, position.longitude);
-    } catch (error) {
-      console.error('Error getting location:', error);
-      // If geolocation fails, search around default center (Paris)
-      await searchBarsNearLocation(center.latitude, center.longitude);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const searchBarsNearLocation = async (latitude, longitude) => {
-    try {
-      const response = await fetch('/api/osm/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ latitude, longitude, radius: 10000 }) // 10km radius
-      });
-      const data = await response.json();
-      
-      if (data.success) {
-        setBars(data.bars);
-      }
-    } catch (error) {
-      console.error('Error fetching bars:', error);
-    }
-  };
-
   return (
-    <Layout title="Carte - ChichaAroundMe">
+    <Layout title="Carte GL - ChichaAroundMe">
       <div className="container py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Rechercher des Bars à Chicha
+            Rechercher des Bars à Chicha (MapLibre GL)
           </h1>
           <SearchBar 
             onSearch={handleSearch} 
@@ -167,16 +177,24 @@ export default function Carte() {
               </div>
             </div>
           </div>
-          {/* Map */}
+          {/* MapLibre GL Map */}
           {loading ? (
             <div className="flex items-center justify-center h-full bg-gray-100">
               <p className="text-gray-500">Chargement de la carte...</p>
             </div>
           ) : (
-            <MapView 
+            <MapLibreView 
               center={center}
               bars={bars}
               userLocation={userLocation}
+              onBoundsChange={(bounds) => {
+                // Fetch bars for the visible bounds when map movement stops
+                searchBarsNearLocation(
+                  (bounds.north + bounds.south) / 2,
+                  (bounds.east + bounds.west) / 2,
+                  bounds
+                );
+              }}
             />
           )}
         </div>

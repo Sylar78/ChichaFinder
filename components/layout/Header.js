@@ -10,6 +10,7 @@ export default function Header() {
     { href: '/', label: 'Accueil', icon: null },
     { href: '/recherche', label: 'Recherche', icon: Search },
     { href: '/carte', label: 'Carte', icon: MapPin },
+    { href: '/carte-gl', label: 'Carte GL', icon: MapPin },
     { href: '/collection', label: 'Ma Collection', icon: Heart },
   ];
 
